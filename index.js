@@ -76,8 +76,10 @@ function updateGameArea() {
   // until reaching the end of the canvas
   let i = startIndex;
 
+  const scale = 4;
+
   while ((i < chords.length) && 
-    (chords[i][0].ticks - time < myGameArea.canvas.width)) {
+    ((chords[i][0].ticks - time) / scale < myGameArea.canvas.width)) {
 
     // draw game piece
 
@@ -96,20 +98,31 @@ function updateGameArea() {
         minDuration = timeTillNextNote;
       }
     }
+
+    minDuration = Math.floor(minDuration / scale);
     
     // determine line width / height
     // should always visually appear to be 5 pixels
-    const lineHeight = 5 / myGameArea.canvas.clientHeight
-      * myGameArea.canvas.height;
-    const lineWidth = 5 / myGameArea.canvas.clientWidth 
-      * myGameArea.canvas.width;
+    
+    //let lineHeight = Math.ceil(5 / myGameArea.canvas.clientHeight
+    //  * myGameArea.canvas.height);
+    let lineWidth = Math.ceil(5 / myGameArea.canvas.clientWidth 
+      * myGameArea.canvas.width);
+    lineHeight = (lineWidth / myGameArea.canvas.width * myGameArea.canvas.clientWidth) 
+      / myGameArea.canvas.clientHeight * myGameArea.canvas.height;
 
-    const x = chords[i][0].ticks - time;
+    //lineHeight = lineWidth = Math.min(lineHeight, lineWidth);
+
+    const x = Math.floor((chords[i][0].ticks - time) / scale);
 
     // draw pointer
     if (i === startIndex) {
       ctx.fillStyle = "red";
       ctx.fillRect(0, 0, minDuration, myGameArea.canvas.height); 
+    } else {
+      //ctx.fillStyle = "blue";
+      //ctx.fillRect(x, 0, minDuration, myGameArea.canvas.height); 
+
     }
 
     ctx.fillStyle = "black";
